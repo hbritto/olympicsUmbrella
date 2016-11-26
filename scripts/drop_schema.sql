@@ -1,0 +1,16 @@
+drop table arbitra cascade constraints;
+drop table árbitro cascade constraints;
+drop table atleta cascade constraints;
+drop table competição cascade constraints;
+drop table complexodesportivo cascade constraints;
+drop table equipe cascade constraints;
+drop table esporte cascade constraints;
+drop table habilitado cascade constraints;
+drop table integra cascade constraints;
+drop table modalidade cascade constraints;
+drop table país cascade constraints;
+drop table participa cascade constraints;
+drop table participante cascade constraints;
+drop table pertence cascade constraints;
+drop table representa cascade constraints;
+drop table suporta cascade constraints;

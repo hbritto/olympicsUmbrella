@@ -18,7 +18,7 @@ create table participante (
 create table pertence (
   nomePaís varchar2(50),
   passaporte varchar2(13),
-  representa byte,
+  representa number(1),
   constraint FK_pertencePaís foreign key (nomePaís)
     references país (nomePaís) on delete cascade,
   constraint FK_pertenceParticipante foreign key (passaporte)
@@ -38,7 +38,8 @@ create table atleta (
 create table árbitro (
   passaporte varchar2(13),
   constraint FK_arbitroParticipante foreign key (passaporte)
-    references participante (passaporte) on delete cascade
+    references participante (passaporte) on delete cascade,
+  constraint PK_árbitro primary key (passaporte)
 );
 
 create table arbitra (
@@ -107,11 +108,11 @@ create table equipe (
 );
 
 create table integra (
-  idAtleta number(5),
+  idAtleta varchar2(13),
   idEquipe number(5),
   constraint FK_integraAtleta foreign key (idAtleta)
     references atleta (passaporte) on delete cascade,
-  constraint FK_inetgraEquipe foreign key (idEquipe)
+  constraint FK_integraEquipe foreign key (idEquipe)
     references equipe (idEquipe) on delete cascade,
   constraint PK_integra primary key (idAtleta, idEquipe)
 );
@@ -120,7 +121,7 @@ create table participa (
   idEquipe number(5),
   idCmp number(5),
   tempoPontos varchar2(15),
-  classificadoVencedor byte,
+  classificadoVencedor number(1),
   constraint FK_participaEquipe foreign key (idEquipe)
     references equipe (idEquipe) on delete cascade,
   constraint FK_participaCompetição foreign key (idCmp)
@@ -148,7 +149,7 @@ create table competição (
 
 create table complexoDesportivo (
   nomeCD varchar2(40),
-  endereçoCD varchar2(100) unique,
+  endereçoCD varchar2(100),
   capPúblico number(6),
   constraint PK_CD primary key (nomeCD)
 );
