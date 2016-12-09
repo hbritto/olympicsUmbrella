@@ -5,9 +5,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
 
 public class GUI extends JFrame implements ActionListener {
@@ -47,7 +45,7 @@ public class GUI extends JFrame implements ActionListener {
         btnExit.addActionListener(this);
 
         btnInsert = new JButton("Inserir");
-        btnInsert.setEnabled(false);
+        btnInsert.setEnabled(true);
         btnInsert.setActionCommand("sql-insert");
         btnInsert.addActionListener(this);
 
@@ -69,7 +67,7 @@ public class GUI extends JFrame implements ActionListener {
         lblAddress = new JLabel("Usuário:");
         lblPort = new JLabel("Senha:");
         txtUser = new JTextField("8910441", 10);
-        txtPassword = new JTextField("", 10);
+        txtPassword = new JTextField("Gui@orcl!1029", 10);
 
         panConnect = new JPanel();
         panOperations = new JPanel();
@@ -157,12 +155,51 @@ public class GUI extends JFrame implements ActionListener {
                 sql.disconnect();
                 dispose();
                 break;
+            case "sql-insert":
+                insert();
+                break;
             case "sql-select":
                 select();
                 break;
             default:
                 System.err.println("ActionEvent desconhecido: " + actionEvent.toString());
                 break;
+        }
+    }
+
+    // TODO, function still incomplete
+    private void insert() {
+        ArrayList<String> tablesList = sql.listTables();
+        String[] tables = new String[tablesList.size()];
+        tables = tablesList.toArray(tables);
+        String selectedTable = (String) JOptionPane.showInputDialog(null,
+                "Escolha uma tabela para inserir",
+                "Inserir",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                tables,
+                tables[0]);
+
+        // selectedTable will be null if the user clicks Cancel
+        if(selectedTable != null) {
+            ResultSet columns = sql.getColumns(selectedTable);
+            try {
+                ArrayList<String> values = new ArrayList<>();
+                String query = "INSERT INTO " + selectedTable + " (";
+                while(columns.next()) {
+                    String input = (String) JOptionPane.showInputDialog(null,
+                            columns.getString("COLUMN_NAME") + " (" + columns.getString("TYPE_NAME").toString() + ")",
+                            "Inserir em: " + selectedTable,
+                            JOptionPane.PLAIN_MESSAGE);
+                    query += columns.getString("COLUMN_NAME") + ", ";
+                    values.add(input);
+                }
+                query = query.substring(0, query.length() - 2); // Remove last comma
+                query += ") VALUES";
+                sql.insert(selectedTable, query, values);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -173,7 +210,7 @@ public class GUI extends JFrame implements ActionListener {
         String selectedTable = (String) JOptionPane.showInputDialog(null,
                 "Escolha uma tabela para listar",
                 "Listar",
-                JOptionPane.QUESTION_MESSAGE,
+                JOptionPane.PLAIN_MESSAGE,
                 null,
                 tables,
                 tables[0]);

@@ -2,6 +2,7 @@ package com.app;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Vector;
 
 public class SQL {
 
@@ -38,6 +39,21 @@ public class SQL {
         }
     }
 
+    public boolean insert(String table, String query, ArrayList<String> data) {
+
+        // create a Statement from the connection
+        Statement statement = null;
+        try {
+            statement = conn.createStatement();
+            // insert the data
+            statement.executeUpdate("INSERT INTO Customers " + "VALUES (1001, 'Simpson', 'Mr.', 'Springfield', 2001)");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
     public ArrayList<String> listTables() {
         ArrayList<String> results = new ArrayList<String>();
         try {
@@ -61,6 +77,35 @@ public class SQL {
         return statement.executeQuery();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        return null;
+    }
+
+    public ResultSet getColumns(String table) {
+        if(conn != null) {
+            try {
+                DatabaseMetaData meta = conn.getMetaData();
+                return meta.getColumns(null, user, table,  "%");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public ArrayList<String> getColumnNames(String table) {
+        if(conn != null) {
+            ArrayList<String> results = new ArrayList<String>();
+
+            try {
+                ResultSet rs = getColumns(table);
+                while (rs.next()) {
+                    results.add(rs.getString(4));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return results;
         }
         return null;
     }
