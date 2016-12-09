@@ -42,15 +42,10 @@ create table árbitro (
   constraint PK_árbitro primary key (passaporte)
 );
 
-create table arbitra (
-  passaporte varchar2(13),
-  idCmp number(5),
-  papel varchar2(20),
-  constraint FK_arbitraÁrbitro foreign key (passaporte)
-    references árbitro (passaporte) on delete cascade,
-  constraint FK_arbitraCompetição foreign key (idCmp)
-    references competição (idCmp) on delete cascade,
-  constraint PK_arbitra primary key (passaporte, idCmp)
+create table esporte (
+  nomeEsporte varchar2(30),
+  unidPontuação char(1),
+  constraint PK_esporte primary key (nomeEsporte)
 );
 
 create table habilitado (
@@ -63,10 +58,67 @@ create table habilitado (
   constraint PK_habilitado primary key (passaporte, nomeEsporte)
 );
 
-create table esporte (
+create table modalidade (
+  nomeMod varchar2(50),
+  catMod varchar2(40),
   nomeEsporte varchar2(30),
-  unidPontuação char(1),
-  constraint PK_esporte primary key (nomeEsporte)
+  maxAtletas number(2),
+  constraint FK_modalidadeEsporte foreign key (nomeEsporte)
+    references esporte (nomeEsporte) on delete cascade,
+  constraint PK_modalidade primary key (nomeMod, catMod)
+);
+
+create table complexoDesportivo (
+  nomeCD varchar2(40),
+  endereçoCD varchar2(100),
+  capPúblico number(6),
+  constraint PK_CD primary key (nomeCD)
+);
+
+
+create table competição (
+  faseCmp varchar2(20),
+  numCmp number(2),
+  nomeMod varchar2(50),
+  catMod varchar2(40),
+  nomeCD varchar2(40),
+  diaHorário date,
+  obs varchar2(500),
+  localização varchar2(100),
+  grupo char(1),
+  idCmp number(5),
+  constraint FK_competiçãoModalidade foreign key (nomeMod, catMod)
+    references modalidade (nomeMod, catMod) on delete cascade,
+  constraint FK_competiçãoCD foreign key (nomeCD)
+    references complexoDesportivo (nomeCD) on delete cascade,
+  constraint PK_competição primary key (idCmp),
+  constraint SK_competição unique (faseCmp, numCmp, nomeMod, catMod)
+);
+
+create table arbitra (
+  passaporte varchar2(13),
+  idCmp number(5),
+  papel varchar2(20),
+  constraint FK_arbitraÁrbitro foreign key (passaporte)
+    references árbitro (passaporte) on delete cascade,
+  constraint FK_arbitraCompetição foreign key (idCmp)
+    references competição (idCmp) on delete cascade,
+  constraint PK_arbitra primary key (passaporte, idCmp)
+);
+
+create table equipe (
+  numEquipe number(5),
+  nomePaís varchar2(50),
+  nomeMod varchar2(50),
+  catMod varchar2(40),
+  quantAtl number(2),
+  idEquipe number(5),
+  constraint FK_equipePaís foreign key (nomePaís)
+    references país (nomePaís) on delete cascade,
+  constraint FK_equipeModalidade foreign key (nomeMod, catMod)
+    references modalidade (nomeMod, catMod) on delete cascade,
+  constraint PK_equipe primary key (idEquipe),
+  constraint SK_equipe unique (numEquipe, nomePaís, nomeMod, catMod)
 );
 
 create table representa (
@@ -81,31 +133,6 @@ create table representa (
   constraint FK_representaEquipe foreign key (idEquipe)
     references equipe (idEquipe) on delete cascade,
   constraint PK_representa primary key (nomeMod, catMod, nomePaís, idEquipe)
-);
-
-create table modalidade (
-  nomeMod varchar2(50),
-  catMod varchar2(40),
-  nomeEsporte varchar2(30),
-  maxAtletas number(2),
-  constraint FK_modalidadeEsporte foreign key (nomeEsporte)
-    references esporte (nomeEsporte) on delete cascade,
-  constraint PK_modalidade primary key (nomeMod, catMod)
-);
-
-create table equipe (
-  numEquipe number(5),
-  nomePaís varchar2(50),
-  nomeMod varchar2(50),
-  catMod varchar2(40),
-  quantAtl number(2),
-  idEquipe number(5),
-  constraint FK_equipePaís foreign key (nomePaís)
-    references país (nomePaís) on delete cascade,
-  constraint FK_equipeModalidade foreign key (nomeMod, catMod)
-    references modalidade (nomeMod, catMod) on delete cascade,
-  constraint PK_equipe primary key (idEquipe)
-  constraint SK_equipe unique (numEquipe, nomePaís, nomeMod, catMod)
 );
 
 create table integra (
@@ -128,32 +155,6 @@ create table participa (
   constraint FK_participaCompetição foreign key (idCmp)
     references competição (idCmp) on delete cascade,
   constraint PK_participa primary key (idEquipe, idCmp)
-);
-
-create table competição (
-  faseCmp varchar2(20),
-  numCmp number(2),
-  nomeMod varchar2(50),
-  catMod varchar2(40),
-  nomeCD varchar2(40),
-  diaHorário date,
-  obs varchar2(500),
-  localização varchar2(100),
-  grupo char(1),
-  idCmp number(5),
-  constraint FK_competiçãoModalidade foreign key (nomeMod, catMod)
-    references modalidade (nomeMod, catMod) on delete cascade,
-  constraint FK_competiçãoCD foreign key (nomeCD)
-    references complexoDesportivo (nomeCD) on delete cascade,
-  constraint PK_competição primary key (idCmp)
-  constraint SK_competição unique (faseCmp, numCmp, nomeMod, catMod)
-);
-
-create table complexoDesportivo (
-  nomeCD varchar2(40),
-  endereçoCD varchar2(100),
-  capPúblico number(6),
-  constraint PK_CD primary key (nomeCD)
 );
 
 create table suporta (
