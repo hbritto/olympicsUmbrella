@@ -270,6 +270,12 @@ insert into Participa
   values (00001, 00001, '10.00', 1);
 
 insert into Participa
+  values (00001, 00002, '10.00', 1);
+
+insert into Participa
+  values (00001, 00003, '10.00', 1);
+
+insert into Participa
   values (00002, 00002, '10.00', 1);
   
 insert into Participa
