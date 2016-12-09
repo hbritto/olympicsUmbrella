@@ -105,6 +105,7 @@ create table equipe (
   constraint FK_equipeModalidade foreign key (nomeMod, catMod)
     references modalidade (nomeMod, catMod) on delete cascade,
   constraint PK_equipe primary key (idEquipe)
+  constraint SK_equipe unique (numEquipe, nomePaís, nomeMod, catMod)
 );
 
 create table integra (
@@ -145,6 +146,7 @@ create table competição (
   constraint FK_competiçãoCD foreign key (nomeCD)
     references complexoDesportivo (nomeCD) on delete cascade,
   constraint PK_competição primary key (idCmp)
+  constraint SK_competição unique (faseCmp, numCmp, nomeMod, catMod)
 );
 
 create table complexoDesportivo (
