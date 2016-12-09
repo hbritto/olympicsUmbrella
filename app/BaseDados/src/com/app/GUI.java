@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.Inet4Address;
+import java.util.*;
 
 /**
  * Created by guian on 26/11/2016.
@@ -20,8 +20,8 @@ public class GUI extends JFrame implements ActionListener {
 
     private JLabel lblAddress;
     private JLabel lblPort;
-    private JTextField txtAddress;
-    private JTextField txtPort;
+    private JTextField txtUser;
+    private JTextField txtPassword;
 
     private JPanel panConnect;
     private JPanel panOperations;
@@ -59,14 +59,14 @@ public class GUI extends JFrame implements ActionListener {
         btnDelete.addActionListener(this);
 
         btnSelect = new JButton("Listar");
-        btnSelect.setEnabled(false);
+        btnSelect.setEnabled(true);
         btnSelect.setActionCommand("sql-select");
         btnSelect.addActionListener(this);
 
-        lblAddress = new JLabel("Endereço:");
-        lblPort = new JLabel("Porta:");
-        txtAddress = new JTextField(20);
-        txtPort = new JTextField(5);
+        lblAddress = new JLabel("Usuário:");
+        lblPort = new JLabel("Senha:");
+        txtUser = new JTextField("8910441", 10);
+        txtPassword = new JTextField("", 10);
 
         panConnect = new JPanel();
         panOperations = new JPanel();
@@ -78,11 +78,11 @@ public class GUI extends JFrame implements ActionListener {
         c.gridy = 0;
         panConnect.add(lblAddress, c);
         c.gridx++;
-        panConnect.add(txtAddress, c);
+        panConnect.add(txtUser, c);
         c.gridx++;
         panConnect.add(lblPort, c);
         c.gridx++;
-        panConnect.add(txtPort, c);
+        panConnect.add(txtPassword, c);
         c.gridx++;
         panConnect.add(btnConnect, c);
         c.gridx++;
@@ -125,37 +125,57 @@ public class GUI extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent actionEvent) {
         switch(actionEvent.getActionCommand()) {
             case "sql-connect":
-//                Inet4Address inet = new Inet4Address(txtAddress.getText(), Integer.parseInt(txtPort.getText()));
-                String address = txtAddress.getText();
+                String user = txtUser.getText();
+                String password = txtPassword.getText();
                 Integer port = null;
-                try {
-                    port = Integer.parseInt(txtPort.getText());
-                    if(port < 0 || port > 65535) {
-                        JOptionPane.showMessageDialog(null, "Número de porta inválida1!");
-                        break;
-                    }
-                } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(null, "Número de porta inválida2!");
-                    break;
-                }
-                if(sql.connect(address, port)) {
+                if(sql.connect(user, password)) {
                     btnConnect.setText("Desconectar");
                     btnConnect.setActionCommand("sql-disconnect");
-                    txtAddress.setEnabled(false);
-                    txtAddress.setEnabled(false);
+                    txtUser.setEnabled(false);
+                    txtPassword.setEnabled(false);
                 } else {
                     JOptionPane.showMessageDialog(null, "Falha na conexão!");
                 }
+                ArrayList<String> results = sql.listTables();
+                for(int i = 0; i < results.size(); i++)
+                    System.out.println(results.get(i));
                 break;
             case "sql-disconnect":
+                sql.disconnect();
+                btnConnect.setText("Conectar");
+                btnConnect.setActionCommand("sql-connect");
+                txtUser.setEnabled(true);
+                txtPassword.setEnabled(true);
                 break;
             case "gui-exit":
                 // Realizar SQL close
                 dispose();
                 break;
+            case "sql-select":
+                select();
+                break;
+
             default:
                 System.err.println("ActionEvent desconhecido: " + actionEvent.toString());
                 break;
         }
     }
+
+    private void select() {
+        ArrayList<String> tablesList = sql.listTables();
+        String[] tables = new String[tablesList.size()];
+        tables = tablesList.toArray(tables);
+        String favoritePizza = (String) JOptionPane.showInputDialog(null,
+                "Escolha uma tabela para listar",
+                "Listar",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                tables,
+                tables[0]);
+
+        // favoritePizza will be null if the user clicks Cancel
+        System.out.printf("Select %s.\n", favoritePizza);
+        System.exit(0);
+    }
+
 }
