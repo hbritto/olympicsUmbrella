@@ -1,14 +1,15 @@
 package com.app;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.*;
 
-/**
- * Created by guian on 26/11/2016.
- */
 public class GUI extends JFrame implements ActionListener {
     private SQL sql;
     private JButton btnConnect;
@@ -22,6 +23,8 @@ public class GUI extends JFrame implements ActionListener {
     private JLabel lblPort;
     private JTextField txtUser;
     private JTextField txtPassword;
+
+    private JTable tblData;
 
     private JPanel panConnect;
     private JPanel panOperations;
@@ -102,23 +105,28 @@ public class GUI extends JFrame implements ActionListener {
         c.gridx++;
         panOperations.setEnabled(false);
 
+        tblData = new JTable();
+
         createFrame();
     }
 
     private void createFrame() {
         //Create and set up the window.
-//        frame = new JFrame("Base de Dados");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        setLayout(new GridLayout(2,1));
-
+//        setLayout(new GridLayout(3,1));
+        setLayout(new BorderLayout());
         //Add contents to the window.
-        add(panConnect);
-        add(panOperations);
+        // TODO: é preciso melhorar a disposição atual dos paineis. O método atual não trabalha bem com ajustes no tamanho da janela.
+        add(panConnect,BorderLayout.NORTH);
+        add(panOperations,BorderLayout.CENTER);
+        add(new JScrollPane(tblData),BorderLayout.SOUTH);
 
         //Display the window.
         pack();
+        setSize(600, getHeight());
         setVisible(true);
+
     }
 
     @Override
@@ -127,18 +135,15 @@ public class GUI extends JFrame implements ActionListener {
             case "sql-connect":
                 String user = txtUser.getText();
                 String password = txtPassword.getText();
-                Integer port = null;
                 if(sql.connect(user, password)) {
                     btnConnect.setText("Desconectar");
                     btnConnect.setActionCommand("sql-disconnect");
                     txtUser.setEnabled(false);
                     txtPassword.setEnabled(false);
+                    btnSelect.setEnabled(true);
                 } else {
                     JOptionPane.showMessageDialog(null, "Falha na conexão!");
                 }
-                ArrayList<String> results = sql.listTables();
-                for(int i = 0; i < results.size(); i++)
-                    System.out.println(results.get(i));
                 break;
             case "sql-disconnect":
                 sql.disconnect();
@@ -146,15 +151,15 @@ public class GUI extends JFrame implements ActionListener {
                 btnConnect.setActionCommand("sql-connect");
                 txtUser.setEnabled(true);
                 txtPassword.setEnabled(true);
+                btnSelect.setEnabled(false);
                 break;
             case "gui-exit":
-                // Realizar SQL close
+                sql.disconnect();
                 dispose();
                 break;
             case "sql-select":
                 select();
                 break;
-
             default:
                 System.err.println("ActionEvent desconhecido: " + actionEvent.toString());
                 break;
@@ -165,7 +170,7 @@ public class GUI extends JFrame implements ActionListener {
         ArrayList<String> tablesList = sql.listTables();
         String[] tables = new String[tablesList.size()];
         tables = tablesList.toArray(tables);
-        String favoritePizza = (String) JOptionPane.showInputDialog(null,
+        String selectedTable = (String) JOptionPane.showInputDialog(null,
                 "Escolha uma tabela para listar",
                 "Listar",
                 JOptionPane.QUESTION_MESSAGE,
@@ -173,9 +178,42 @@ public class GUI extends JFrame implements ActionListener {
                 tables,
                 tables[0]);
 
-        // favoritePizza will be null if the user clicks Cancel
-        System.out.printf("Select %s.\n", favoritePizza);
-        System.exit(0);
+        // selectedTable will be null if the user clicks Cancel
+        System.out.printf("SELECT * FROM %s.\n", selectedTable);
+        if(selectedTable != null)
+            list(selectedTable);
     }
 
+    private void list(String table) {
+        try {
+            ResultSet rs = sql.selectTable(table);
+            tblData.setModel(buildTableModel(sql.selectTable(table)));
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+        }
+    }
+
+    public static DefaultTableModel buildTableModel(ResultSet rs)
+            throws SQLException {
+        ResultSetMetaData metaData = rs.getMetaData();
+
+        // names of columns
+        Vector<String> columnNames = new Vector<String>();
+        int columnCount = metaData.getColumnCount();
+        for (int column = 1; column <= columnCount; column++) {
+            columnNames.add(metaData.getColumnName(column));
+        }
+
+        // data of the table
+        Vector<Vector<Object>> data = new Vector<Vector<Object>>();
+        while (rs.next()) {
+            Vector<Object> vector = new Vector<Object>();
+            for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
+                vector.add(rs.getObject(columnIndex));
+            }
+            data.add(vector);
+        }
+
+        return new DefaultTableModel(data, columnNames);
+    }
 }

@@ -1,14 +1,8 @@
 package com.app;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
-/**
- * Created by guian on 26/11/2016.
- */
 public class SQL {
 
     private Connection conn;
@@ -57,5 +51,17 @@ public class SQL {
             e.printStackTrace();
         }
         return results;
+    }
+
+    public ResultSet selectTable(String table) {
+        PreparedStatement statement =
+                null;
+            try {
+            statement = conn.prepareStatement("SELECT * FROM " + table);
+        return statement.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
