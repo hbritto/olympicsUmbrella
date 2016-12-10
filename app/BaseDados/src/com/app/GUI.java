@@ -30,6 +30,7 @@ public class GUI extends JFrame implements ActionListener {
 
     private JPanel panConnect;
     private JPanel panOperations;
+    private JPanel panList;
 
     public GUI(SQL sql) {
         super("Base de dados");
@@ -76,41 +77,25 @@ public class GUI extends JFrame implements ActionListener {
 
         panConnect = new JPanel();
         panOperations = new JPanel();
+        panList = new JPanel();
 
         // Adiciona os componentes no JPanel
-        GridBagConstraints c = new GridBagConstraints();
-        c.insets = new Insets(3,3,3,3);
-        c.gridx = 0;
-        c.gridy = 0;
-        panConnect.add(lblAddress, c);
-        c.gridx++;
-        panConnect.add(txtUser, c);
-        c.gridx++;
-        panConnect.add(lblPort, c);
-        c.gridx++;
-        panConnect.add(txtPassword, c);
-        c.gridx++;
-        panConnect.add(btnConnect, c);
-        c.gridx++;
-        panConnect.add(btnExit, c);
+        panConnect.add(lblAddress);
+        panConnect.add(txtUser);
+        panConnect.add(lblPort);
+        panConnect.add(txtPassword);
+        panConnect.add(btnConnect);
+        panConnect.add(btnExit);
 
-//        // Segunda linha
-//        c.gridwidth = 4;
-//        c.gridx = 0;
-//        c.gridy = 1;
+        // Segunda linha
         panOperations.add(lblModalidade);
-//        c.gridx++;
         panOperations.add(btnInsert);
-//        c.gridx++;
         panOperations.add(btnUpdate);
-//        c.gridx++;
         panOperations.add(btnDelete);
-//        c.gridx++;
         panOperations.add(btnSelect);
-//        c.gridx++;
-        panOperations.setEnabled(false);
 
         tblData = new JTable();
+        panList.add(new JScrollPane(tblData));
 
         createFrame();
     }
@@ -118,20 +103,20 @@ public class GUI extends JFrame implements ActionListener {
     private void createFrame() {
         //Create and set up the window.
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-//        setLayout(new GridLayout(3,1));
         setLayout(new BorderLayout());
+
         //Add contents to the window.
-        // TODO: é preciso melhorar a disposição atual dos paineis. O método atual não trabalha bem com ajustes no tamanho da janela.
-        add(panConnect,BorderLayout.NORTH);
-        add(panOperations,BorderLayout.CENTER);
-        add(new JScrollPane(tblData),BorderLayout.SOUTH);
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BorderLayout());
+        topPanel.add(panConnect, BorderLayout.NORTH);
+        topPanel.add(panOperations, BorderLayout.SOUTH);
+        add(topPanel,BorderLayout.PAGE_START);
+        add(new JScrollPane(tblData),BorderLayout.CENTER);
 
         //Display the window.
         pack();
         setSize(600, getHeight());
         setVisible(true);
-
     }
 
     @Override
@@ -317,6 +302,7 @@ public class GUI extends JFrame implements ActionListener {
                     JOptionPane.ERROR_MESSAGE);
         }
     }
+
     private void selectModalidade() {
         ArrayList<String> tablesList = sql.listTables();
         String[] tables = new String[tablesList.size()];
