@@ -166,5 +166,23 @@ create table suporta (
     references complexoDesportivo (nomeCD),
   constraint PK_suporta primary key (nomeEsporte, nomeCD)
 );
-  
+
+create sequence seq_cmp start with 1;
+create sequence seq_equipe start with 1;
+
+create or replace trigger cmp_gen_id
+before insert on competição
+for each row
+begin
+  select seq_cmp.nextval into :new.idCmp from dual;
+end;
+/
+
+create or replace trigger equipe_gen_id
+before insert on equipe 
+for each row
+begin
+  select seq_equipe.nextval into :new.idEquipe from dual;
+end;
+/
   

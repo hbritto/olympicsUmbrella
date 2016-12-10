@@ -193,14 +193,14 @@ insert into Modalidade
   values ('3000M Obstáculos Masculino', 'Grupo', 'Atletismo', 6);
   
 /* Insert into Equipe */
-insert into Equipe
-  values (12121, 'Alemanha', '200M Rasos Feminino', 'Grupo', 8, 00001);
+insert into Equipe (numequipe, nomepaís, nomemod, catmod, quantatl)
+  values (12121, 'Alemanha', '200M Rasos Feminino', 'Grupo', 8);
   
-insert into Equipe
-  values (21212, 'Canadá', '3000M Obstáculos Masculino', 'Grupo', 8, 00002);
+insert into Equipe (numequipe, nomepaís, nomemod, catmod, quantatl)
+  values (21212, 'Canadá', '3000M Obstáculos Masculino', 'Grupo', 8);
   
-insert into Equipe
-  values (32323, 'Brasil', '200M Livre Masculino', 'Grupo', 8, 00003);
+insert into Equipe (numequipe, nomepaís, nomemod, catmod, quantatl)
+  values (32323, 'Brasil', '200M Livre Masculino', 'Grupo', 8);
   
 /* Insert into Representa */
 insert into Representa
@@ -233,17 +233,17 @@ insert into ComplexoDesportivo
   values ('Templo dos Heróis', 'Rua Nagasaki 95', 60000);
   
 /* Insert into Competição */
-insert into Competição
+insert into Competição (fasecmp, numcmp, nomemod, catmod, nomeCD, diahorário, obs, localização, grupo)
   values ('Oitavas', 01, '200M Rasos Feminino', 'Grupo', 'Ninho de Pássaro', to_date('17-12-2016', 'DD-MM-YYYY'),
-    'Competição de corrida feminina de 200m rasos', 'Rua Osaka 123', 'A', 00001);
+    'Competição de corrida feminina de 200m rasos', 'Rua Osaka 123', 'A');
     
-insert into Competição
+insert into Competição (fasecmp, numcmp, nomemod, catmod, nomeCD, diahorário, obs, localização, grupo)
   values ('Oitavas', 02, '3000M Obstáculos Masculino', 'Grupo', 'Capacete de Ciclista', to_date('17-12-2016', 'DD-MM-YYYY'),
-    'Competição de natação feminina de 200m rasos', 'Rua Hiroshima 456', 'A', 00002);
+    'Competição de natação feminina de 200m rasos', 'Rua Hiroshima 456', 'A');
     
-insert into Competição
+insert into Competição (fasecmp, numcmp, nomemod, catmod, nomeCD, diahorário, obs, localização, grupo)
   values ('Oitavas', 03, '200M Livre Masculino', 'Grupo', 'Templo dos Heróis', to_date('17-12-2016', 'DD-MM-YYYY'),
-    'Competição de corrida masculina de 200m rasos', 'Rua Nagasaki 95', 'A', 00003);
+    'Competição de corrida masculina de 200m rasos', 'Rua Nagasaki 95', 'A');
     
 /* Insert into Suporta */
 insert into Suporta
@@ -257,27 +257,27 @@ insert into Suporta
   
 /* Insert into Arbitra */
 insert into Arbitra
-  values ('AA121212', 00001, 'Árbitro');
+  values ('AA121212', 1, 'Árbitro');
   
 insert into Arbitra
-  values ('BB212121', 00002, 'Árbitro');
+  values ('BB212121', 2, 'Árbitro');
   
 insert into Arbitra
-  values ('CC323232', 00003, 'Árbitro');
+  values ('CC323232', 3, 'Árbitro');
   
 /* Insert into Participa */
 insert into Participa
-  values (00001, 00001, '10.00', 1);
+  values (1, 1, '10.00', 1);
 
 insert into Participa
-  values (00001, 00002, '10.00', 1);
+  values (1, 2, '10.00', 1);
 
 insert into Participa
-  values (00001, 00003, '10.00', 1);
+  values (1, 3, '10.00', 1);
 
 insert into Participa
-  values (00002, 00002, '10.00', 1);
+  values (2, 2, '10.00', 1);
   
 insert into Participa
-  values (00003, 00003, '10.00', 1);
+  values (3, 3, '10.00', 1);
 

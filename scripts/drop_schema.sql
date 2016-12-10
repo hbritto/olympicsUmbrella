@@ -14,3 +14,5 @@ drop table participante cascade constraints;
 drop table pertence cascade constraints;
 drop table representa cascade constraints;
 drop table suporta cascade constraints;
+drop sequence seq_cmp;
+drop sequence seq_equipe;
