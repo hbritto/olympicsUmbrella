@@ -184,33 +184,33 @@ insert into Habilitado
   
 /* Insert into Modalidade */
 insert into Modalidade
-  values ('200M Livre Masculino', 'Grupo', 'Natação', 10);
+  values ('200M Livre', 'Masculino', 'Natação', 10);
 
 insert into Modalidade
-  values ('200M Rasos Feminino', 'Grupo', 'Atletismo', 6);
+  values ('200M Rasos', 'Feminino', 'Atletismo', 6);
 
 insert into Modalidade
-  values ('3000M Obstáculos Masculino', 'Grupo', 'Atletismo', 6);
+  values ('3000M Obstáculos', 'Masculino', 'Atletismo', 6);
   
 /* Insert into Equipe */
 insert into Equipe (numequipe, nomepaís, nomemod, catmod, quantatl)
-  values (12121, 'Alemanha', '200M Rasos Feminino', 'Grupo', 8);
+  values (12121, 'Alemanha', '200M Rasos', 'Feminino', 8);
   
 insert into Equipe (numequipe, nomepaís, nomemod, catmod, quantatl)
-  values (21212, 'Canadá', '3000M Obstáculos Masculino', 'Grupo', 8);
+  values (21212, 'Canadá', '3000M Obstáculos', 'Masculino', 8);
   
 insert into Equipe (numequipe, nomepaís, nomemod, catmod, quantatl)
-  values (32323, 'Brasil', '200M Livre Masculino', 'Grupo', 8);
+  values (32323, 'Brasil', '200M Livre', 'Masculino', 8);
   
 /* Insert into Representa */
 insert into Representa
-  values ('200M Rasos Feminino', 'Grupo', 'Alemanha', 00001);
+  values ('200M Rasos', 'Feminino', 'Alemanha', 00001);
   
 insert into Representa
-  values ('3000M Obstáculos Masculino', 'Grupo', 'Canadá', 00002);
+  values ('3000M Obstáculos', 'Masculino', 'Canadá', 00002);
   
 insert into Representa
-  values ('200M Livre Masculino', 'Grupo', 'Brasil', 00003);
+  values ('200M Livre', 'Masculino', 'Brasil', 00003);
 
 /* Insert into Integra */
 insert into Integra
@@ -234,15 +234,15 @@ insert into ComplexoDesportivo
   
 /* Insert into Competição */
 insert into Competição (fasecmp, numcmp, nomemod, catmod, nomeCD, diahorário, obs, localização, grupo)
-  values ('Oitavas', 01, '200M Rasos Feminino', 'Grupo', 'Ninho de Pássaro', to_date('17-12-2016', 'DD-MM-YYYY'),
+  values ('Oitavas', 01, '200M Rasos', 'Feminino', 'Ninho de Pássaro', to_date('17-12-2016', 'DD-MM-YYYY'),
     'Competição de corrida feminina de 200m rasos', 'Rua Osaka 123', 'A');
     
 insert into Competição (fasecmp, numcmp, nomemod, catmod, nomeCD, diahorário, obs, localização, grupo)
-  values ('Oitavas', 02, '3000M Obstáculos Masculino', 'Grupo', 'Capacete de Ciclista', to_date('17-12-2016', 'DD-MM-YYYY'),
+  values ('Oitavas', 02, '3000M Obstáculos', 'Masculino', 'Capacete de Ciclista', to_date('17-12-2016', 'DD-MM-YYYY'),
     'Competição de natação feminina de 200m rasos', 'Rua Hiroshima 456', 'A');
     
 insert into Competição (fasecmp, numcmp, nomemod, catmod, nomeCD, diahorário, obs, localização, grupo)
-  values ('Oitavas', 03, '200M Livre Masculino', 'Grupo', 'Templo dos Heróis', to_date('17-12-2016', 'DD-MM-YYYY'),
+  values ('Oitavas', 03, '200M Livre', 'Masculino', 'Templo dos Heróis', to_date('17-12-2016', 'DD-MM-YYYY'),
     'Competição de corrida masculina de 200m rasos', 'Rua Nagasaki 95', 'A');
     
 /* Insert into Suporta */
