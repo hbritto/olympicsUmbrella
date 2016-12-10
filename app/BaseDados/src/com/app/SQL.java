@@ -39,18 +39,20 @@ public class SQL {
         }
     }
 
-    public boolean insert(String table, String query, ArrayList<String> data) {
 
-        // create a Statement from the connection
-        Statement statement = null;
-        try {
-            statement = conn.createStatement();
-            // insert the data
-            statement.executeUpdate("INSERT INTO Customers " + "VALUES (1001, 'Simpson', 'Mr.', 'Springfield', 2001)");
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public boolean query(String q) {
+        if(conn != null) {
+            try {
+                Statement statement = conn.createStatement();
+                // insert the data
+                System.out.println(q);
+                statement.executeUpdate(q);
+                return true;
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }
         }
-
         return false;
     }
 
@@ -108,5 +110,22 @@ public class SQL {
             return results;
         }
         return null;
+    }
+
+    public ArrayList<String> selectColumn(String column, String table) {
+        ArrayList<String> results = new ArrayList<String>();
+        if(conn != null) {
+            try {
+                PreparedStatement statement = conn.prepareStatement("SELECT " + column + " FROM " + table);
+                ResultSet rs = statement.executeQuery();
+                while (rs.next()) {
+                    results.add(rs.getString(1));
+                }
+                return results;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return results;
     }
 }

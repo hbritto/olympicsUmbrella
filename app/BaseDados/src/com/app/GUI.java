@@ -2,10 +2,13 @@ package com.app;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
+import java.text.ParseException;
 import java.util.*;
 
 public class GUI extends JFrame implements ActionListener {
@@ -160,10 +163,10 @@ public class GUI extends JFrame implements ActionListener {
                 dispose();
                 break;
             case "sql-insert":
-                insert();
+                insertModalidade();
                 break;
             case "sql-select":
-                select();
+                selectModalidade();
                 break;
             default:
                 System.err.println("ActionEvent desconhecido: " + actionEvent.toString());
@@ -172,42 +175,89 @@ public class GUI extends JFrame implements ActionListener {
     }
 
     // TODO, function still incomplete
-    private void insert() {
-        ArrayList<String> tablesList = sql.listTables();
-        String[] tables = new String[tablesList.size()];
-        tables = tablesList.toArray(tables);
-        String selectedTable = (String) JOptionPane.showInputDialog(null,
-                "Escolha uma tabela para inserir",
-                "Inserir",
+    private void insertModalidade() {
+        MaskFormatter formatterName = null;
+        MaskFormatter formatterCategory = null;
+        MaskFormatter formatterMax = null;
+        try {
+            formatterName = new MaskFormatter("**************************************************");
+            formatterCategory = new MaskFormatter("****************************************");
+            formatterMax = new MaskFormatter("##");
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        // Get name
+        JFormattedTextField jftf = new JFormattedTextField(formatterName);
+        jftf.setColumns(25);
+        JLabel jl = new JLabel("Nome: ");
+        Box box = Box.createHorizontalBox();
+        box.add(jl);
+        box.add(jftf);
+        JOptionPane.showConfirmDialog(null,
+                box,
+                "Inserir modalidade",
+                JOptionPane.CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
+        String name = jftf.getText().trim();
+
+        // Get category
+        jl.setText("Categoria: ");
+        jftf.setValue("");
+        jftf.setFormatterFactory(new DefaultFormatterFactory(formatterCategory));
+        JOptionPane.showConfirmDialog(null,
+                box,
+                "Inserir modalidade",
+                JOptionPane.CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
+        String category = jftf.getText().trim();
+
+        // Get sport name
+        ArrayList<String> esportes = sql.selectColumn("nomeEsporte","esporte");
+        String[] tables = new String[esportes.size()];
+        tables = esportes.toArray(tables);
+        String sport = (String) JOptionPane.showInputDialog(null,
+                "Esporte:",
+                "Inserir modalidade",
                 JOptionPane.PLAIN_MESSAGE,
                 null,
                 tables,
                 tables[0]);
 
-        // selectedTable will be null if the user clicks Cancel
-        if(selectedTable != null) {
-            ResultSet columns = sql.getColumns(selectedTable);
-            try {
-                ArrayList<String> values = new ArrayList<>();
-                String query = "INSERT INTO " + selectedTable + " (";
-                while(columns.next()) {
-                    String input = (String) JOptionPane.showInputDialog(null,
-                            columns.getString("COLUMN_NAME") + " (" + columns.getString("TYPE_NAME").toString() + ")",
-                            "Inserir em: " + selectedTable,
-                            JOptionPane.PLAIN_MESSAGE);
-                    query += columns.getString("COLUMN_NAME") + ", ";
-                    values.add(input);
-                }
-                query = query.substring(0, query.length() - 2); // Remove last comma
-                query += ") VALUES";
-                sql.insert(selectedTable, query, values);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+        // Get maximum athletes
+        jl.setText("Número máximo de atletas: ");
+        jftf.setValue("");
+        jftf.setFormatterFactory(new DefaultFormatterFactory(formatterMax));
+        jftf.setColumns(10);
+        String nMax = "";
+        while(nMax.length() == 0) {
+            int x = JOptionPane.showConfirmDialog(null,
+                    box,
+                    "Inserir modalidade",
+                    JOptionPane.CANCEL_OPTION,
+                    JOptionPane.PLAIN_MESSAGE);
+            if(x != 0)
+                return;
+            nMax = jftf.getText().trim();
+        }
+
+        // Construct and execute SQL query
+        String q = "INSERT INTO modalidade VALUES('" +
+                name + "', '" +
+                category + "', '" +
+                sport + "', " +
+                nMax + ")";
+        if(!sql.query(q)) {
+            JOptionPane.showMessageDialog(null,
+                    "A inserção falhou!",
+                    "ERRO",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    private void select() {
+    private void selectModalidade() {
         ArrayList<String> tablesList = sql.listTables();
         String[] tables = new String[tablesList.size()];
         tables = tablesList.toArray(tables);
