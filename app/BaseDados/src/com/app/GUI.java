@@ -189,11 +189,13 @@ public class GUI extends JFrame implements ActionListener {
         box.add(jftf);
         String name = "";
         while(name.length() == 0) {
-            JOptionPane.showConfirmDialog(null,
+            int x = JOptionPane.showConfirmDialog(null,
                     box,
                     "Inserir modalidade",
                     JOptionPane.CANCEL_OPTION,
                     JOptionPane.PLAIN_MESSAGE);
+            if(x != 0)
+                return;
             name = jftf.getText().trim();
         }
 
@@ -203,11 +205,13 @@ public class GUI extends JFrame implements ActionListener {
         jftf.setFormatterFactory(new DefaultFormatterFactory(formatterCategory));
         String category = "";
         while(category.length() == 0) {
-            JOptionPane.showConfirmDialog(null,
+            int x = JOptionPane.showConfirmDialog(null,
                     box,
                     "Inserir modalidade",
                     JOptionPane.CANCEL_OPTION,
                     JOptionPane.PLAIN_MESSAGE);
+            if(x != 0)
+                return;
             category = jftf.getText().trim();
         }
 

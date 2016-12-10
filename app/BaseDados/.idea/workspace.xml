@@ -32,15 +32,14 @@
       <file leaf-file-name="GUI.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/app/GUI.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="118" column="25" lean-forward="false" selection-start-line="118" selection-start-column="25" selection-end-line="118" selection-end-column="25" />
+            <state relative-caret-position="-292">
+              <caret line="195" column="46" lean-forward="false" selection-start-line="195" selection-start-column="46" selection-end-line="195" selection-end-column="46" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="method#insertModalidade#0;class#GUI#0" expanded="false" />
                 <element signature="method#deleteModalidade#0;class#GUI#0" expanded="false" />
-                <element signature="e#11463#11471#0" expanded="true" />
-                <element signature="e#11741#11757#0" expanded="true" />
-                <element signature="e#11835#11843#0" expanded="true" />
+                <element signature="e#11573#11581#0" expanded="true" />
+                <element signature="e#11851#11867#0" expanded="true" />
+                <element signature="e#11945#11953#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -471,11 +470,10 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#insertModalidade#0;class#GUI#0" expanded="false" />
             <element signature="method#deleteModalidade#0;class#GUI#0" expanded="false" />
-            <element signature="e#11463#11471#0" expanded="true" />
-            <element signature="e#11741#11757#0" expanded="true" />
-            <element signature="e#11835#11843#0" expanded="true" />
+            <element signature="e#11573#11581#0" expanded="true" />
+            <element signature="e#11851#11867#0" expanded="true" />
+            <element signature="e#11945#11953#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -514,11 +512,10 @@
           <caret line="133" column="60" lean-forward="false" selection-start-line="133" selection-start-column="60" selection-end-line="133" selection-end-column="60" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#insertModalidade#0;class#GUI#0" expanded="false" />
             <element signature="method#deleteModalidade#0;class#GUI#0" expanded="false" />
-            <element signature="e#11463#11471#0" expanded="true" />
-            <element signature="e#11741#11757#0" expanded="true" />
-            <element signature="e#11835#11843#0" expanded="true" />
+            <element signature="e#11573#11581#0" expanded="true" />
+            <element signature="e#11851#11867#0" expanded="true" />
+            <element signature="e#11945#11953#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -657,15 +654,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/app/GUI.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="118" column="25" lean-forward="false" selection-start-line="118" selection-start-column="25" selection-end-line="118" selection-end-column="25" />
+        <state relative-caret-position="-292">
+          <caret line="195" column="46" lean-forward="false" selection-start-line="195" selection-start-column="46" selection-end-line="195" selection-end-column="46" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#insertModalidade#0;class#GUI#0" expanded="false" />
             <element signature="method#deleteModalidade#0;class#GUI#0" expanded="false" />
-            <element signature="e#11463#11471#0" expanded="true" />
-            <element signature="e#11741#11757#0" expanded="true" />
-            <element signature="e#11835#11843#0" expanded="true" />
+            <element signature="e#11573#11581#0" expanded="true" />
+            <element signature="e#11851#11867#0" expanded="true" />
+            <element signature="e#11945#11953#0" expanded="true" />
           </folding>
         </state>
       </provider>
