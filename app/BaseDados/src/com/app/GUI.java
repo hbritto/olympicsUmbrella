@@ -50,7 +50,7 @@ public class GUI extends JFrame implements ActionListener {
         lblModalidade = new JLabel("Modalidade");
 
         btnInsert = new JButton("Inserir");
-        btnInsert.setEnabled(true);
+        btnInsert.setEnabled(false);
         btnInsert.setActionCommand("sql-insert");
         btnInsert.addActionListener(this);
 
@@ -65,7 +65,7 @@ public class GUI extends JFrame implements ActionListener {
         btnDelete.addActionListener(this);
 
         btnSelect = new JButton("Listar");
-        btnSelect.setEnabled(true);
+        btnSelect.setEnabled(false);
         btnSelect.setActionCommand("sql-select");
         btnSelect.addActionListener(this);
 
@@ -146,6 +146,8 @@ public class GUI extends JFrame implements ActionListener {
                     txtUser.setEnabled(false);
                     txtPassword.setEnabled(false);
                     btnSelect.setEnabled(true);
+                    btnInsert.setEnabled(true);
+                    btnDelete.setEnabled(true);
                 } else {
                     JOptionPane.showMessageDialog(null, "Falha na conexão!");
                 }
@@ -157,6 +159,8 @@ public class GUI extends JFrame implements ActionListener {
                 txtUser.setEnabled(true);
                 txtPassword.setEnabled(true);
                 btnSelect.setEnabled(false);
+                btnInsert.setEnabled(false);
+                btnDelete.setEnabled(false);
                 break;
             case "gui-exit":
                 sql.disconnect();
@@ -164,6 +168,9 @@ public class GUI extends JFrame implements ActionListener {
                 break;
             case "sql-insert":
                 insertModalidade();
+                break;
+            case "sql-delete":
+                deleteModalidade();
                 break;
             case "sql-select":
                 selectModalidade();
@@ -174,7 +181,6 @@ public class GUI extends JFrame implements ActionListener {
         }
     }
 
-    // TODO, function still incomplete
     private void insertModalidade() {
         MaskFormatter formatterName = null;
         MaskFormatter formatterCategory = null;
@@ -196,23 +202,29 @@ public class GUI extends JFrame implements ActionListener {
         Box box = Box.createHorizontalBox();
         box.add(jl);
         box.add(jftf);
-        JOptionPane.showConfirmDialog(null,
-                box,
-                "Inserir modalidade",
-                JOptionPane.CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE);
-        String name = jftf.getText().trim();
+        String name = "";
+        while(name.length() == 0) {
+            JOptionPane.showConfirmDialog(null,
+                    box,
+                    "Inserir modalidade",
+                    JOptionPane.CANCEL_OPTION,
+                    JOptionPane.PLAIN_MESSAGE);
+            name = jftf.getText().trim();
+        }
 
         // Get category
         jl.setText("Categoria: ");
         jftf.setValue("");
         jftf.setFormatterFactory(new DefaultFormatterFactory(formatterCategory));
-        JOptionPane.showConfirmDialog(null,
-                box,
-                "Inserir modalidade",
-                JOptionPane.CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE);
-        String category = jftf.getText().trim();
+        String category = "";
+        while(category.length() == 0) {
+            JOptionPane.showConfirmDialog(null,
+                    box,
+                    "Inserir modalidade",
+                    JOptionPane.CANCEL_OPTION,
+                    JOptionPane.PLAIN_MESSAGE);
+            category = jftf.getText().trim();
+        }
 
         // Get sport name
         ArrayList<String> esportes = sql.selectColumn("nomeEsporte","esporte");
@@ -257,6 +269,54 @@ public class GUI extends JFrame implements ActionListener {
         }
     }
 
+    // TODO: adicionar as outras colunas e fazer que um campo em banco desconsidere a condição da coluna em questão.
+    private void deleteModalidade() {
+        MaskFormatter formatterName = null;
+        MaskFormatter formatterCategory = null;
+        try {
+            formatterName = new MaskFormatter("**************************************************");
+            formatterCategory = new MaskFormatter("****************************************");
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        // Get name
+        JFormattedTextField jftf = new JFormattedTextField(formatterName);
+        jftf.setColumns(25);
+        JLabel jl = new JLabel("Nome: ");
+        Box box = Box.createHorizontalBox();
+        box.add(jl);
+        box.add(jftf);
+        JOptionPane.showConfirmDialog(null,
+                box,
+                "Remover modalidade",
+                JOptionPane.CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
+        String name = jftf.getText().trim();
+// Get category
+        jl.setText("Categoria: ");
+        jftf.setValue("");
+        jftf.setFormatterFactory(new DefaultFormatterFactory(formatterCategory));
+        JOptionPane.showConfirmDialog(null,
+                box,
+                "Inserir modalidade",
+                JOptionPane.CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
+        String category = jftf.getText().trim();
+
+        // Construct and execute SQL query
+        String q = "DELETE FROM modalidade WHERE(nomeMod='" +
+                name + "' AND catMod='" +
+                category + "')";
+        if(!sql.query(q)) {
+            JOptionPane.showMessageDialog(null,
+                    "A remoção falhou!",
+                    "ERRO",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
     private void selectModalidade() {
         ArrayList<String> tablesList = sql.listTables();
         String[] tables = new String[tablesList.size()];
