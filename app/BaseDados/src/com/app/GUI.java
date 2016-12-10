@@ -17,6 +17,7 @@ public class GUI extends JFrame implements ActionListener {
     private JButton btnDelete;
     private JButton btnSelect;
 
+    private JLabel lblModalidade;
     private JLabel lblAddress;
     private JLabel lblPort;
     private JTextField txtUser;
@@ -26,7 +27,6 @@ public class GUI extends JFrame implements ActionListener {
 
     private JPanel panConnect;
     private JPanel panOperations;
-
 
     public GUI(SQL sql) {
         super("Base de dados");
@@ -43,6 +43,8 @@ public class GUI extends JFrame implements ActionListener {
         btnExit = new JButton("Sair");
         btnExit.setActionCommand("gui-exit");
         btnExit.addActionListener(this);
+
+        lblModalidade = new JLabel("Modalidade");
 
         btnInsert = new JButton("Inserir");
         btnInsert.setEnabled(true);
@@ -89,18 +91,20 @@ public class GUI extends JFrame implements ActionListener {
         c.gridx++;
         panConnect.add(btnExit, c);
 
-        // Segunda linha
-        c.gridwidth = 4;
-        c.gridx = 0;
-        c.gridy = 1;
-        panOperations.add(btnInsert, c);
-        c.gridx++;
-        panOperations.add(btnUpdate, c);
-        c.gridx++;
-        panOperations.add(btnDelete, c);
-        c.gridx++;
-        panOperations.add(btnSelect, c);
-        c.gridx++;
+//        // Segunda linha
+//        c.gridwidth = 4;
+//        c.gridx = 0;
+//        c.gridy = 1;
+        panOperations.add(lblModalidade);
+//        c.gridx++;
+        panOperations.add(btnInsert);
+//        c.gridx++;
+        panOperations.add(btnUpdate);
+//        c.gridx++;
+        panOperations.add(btnDelete);
+//        c.gridx++;
+        panOperations.add(btnSelect);
+//        c.gridx++;
         panOperations.setEnabled(false);
 
         tblData = new JTable();
