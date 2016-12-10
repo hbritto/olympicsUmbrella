@@ -133,6 +133,7 @@ public class GUI extends JFrame implements ActionListener {
                     btnSelect.setEnabled(true);
                     btnInsert.setEnabled(true);
                     btnDelete.setEnabled(true);
+                    btnUpdate.setEnabled(true);
                 } else {
                     JOptionPane.showMessageDialog(null, "Falha na conexão!");
                 }
@@ -146,6 +147,7 @@ public class GUI extends JFrame implements ActionListener {
                 btnSelect.setEnabled(false);
                 btnInsert.setEnabled(false);
                 btnDelete.setEnabled(false);
+                btnUpdate.setEnabled(false);
                 break;
             case "gui-exit":
                 sql.disconnect();
@@ -153,6 +155,9 @@ public class GUI extends JFrame implements ActionListener {
                 break;
             case "sql-insert":
                 insertModalidade();
+                break;
+            case "sql-update":
+                updateModalidade();
                 break;
             case "sql-delete":
                 deleteModalidade();
@@ -173,8 +178,7 @@ public class GUI extends JFrame implements ActionListener {
         try {
             formatterName = new MaskFormatter("**************************************************");
             formatterCategory = new MaskFormatter("****************************************");
-            formatterMax = new MaskFormatter("##");
-
+            formatterMax = new MaskFormatter("**");
         } catch (ParseException e) {
             e.printStackTrace();
             return;
@@ -229,6 +233,7 @@ public class GUI extends JFrame implements ActionListener {
 
         // Get maximum athletes
         jl.setText("Número máximo de atletas: ");
+        formatterMax.setValidCharacters("0123456789");
         jftf.setValue("");
         jftf.setFormatterFactory(new DefaultFormatterFactory(formatterMax));
         jftf.setColumns(10);
@@ -242,6 +247,8 @@ public class GUI extends JFrame implements ActionListener {
             if(x != 0)
                 return;
             nMax = jftf.getText().trim();
+            System.out.println("'" + jftf.getText() + "'");
+            System.out.println("'" + jftf.getText().trim() + "'");
         }
 
         // Construct and execute SQL query
@@ -258,6 +265,87 @@ public class GUI extends JFrame implements ActionListener {
         }
     }
 
+    private void updateModalidade() {
+        MaskFormatter formatterName = null;
+        MaskFormatter formatterCategory = null;
+        MaskFormatter formatterMax = null;
+        try {
+            formatterName = new MaskFormatter("**************************************************");
+            formatterCategory = new MaskFormatter("****************************************");
+            formatterMax = new MaskFormatter("##");
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        // Get name
+        JFormattedTextField jftf = new JFormattedTextField(formatterName);
+        jftf.setColumns(25);
+        JLabel jl = new JLabel("Nome da modalidade  ser alterada: ");
+        Box box = Box.createHorizontalBox();
+        box.add(jl);
+        box.add(jftf);
+        JOptionPane.showConfirmDialog(null,
+                box,
+                "Atualizar modalidade",
+                JOptionPane.CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
+        String name = jftf.getText().trim();
+        // Get category
+        jl.setText("Categoria da modalidade  ser alterada: ");
+        jftf.setValue("");
+        jftf.setFormatterFactory(new DefaultFormatterFactory(formatterCategory));
+        JOptionPane.showConfirmDialog(null,
+                box,
+                "Remover modalidade",
+                JOptionPane.CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
+        String category = jftf.getText().trim();
+
+        // Get new sport name
+        ArrayList<String> esportes = sql.selectColumn("nomeEsporte","esporte");
+        String[] tables = new String[esportes.size()];
+        tables = esportes.toArray(tables);
+        String sport = (String) JOptionPane.showInputDialog(null,
+                "Esporte atualizado:",
+                "Atualizar modalidade",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                tables,
+                tables[0]);
+
+        // Get new maximum athletes
+        jl.setText("Número máximo de atletas atualizado: ");
+        jftf.setValue("");
+        jftf.setFormatterFactory(new DefaultFormatterFactory(formatterMax));
+        jftf.setColumns(10);
+        String nMax = "";
+        while(nMax.length() == 0) {
+            int x = JOptionPane.showConfirmDialog(null,
+                    box,
+                    "Inserir modalidade",
+                    JOptionPane.CANCEL_OPTION,
+                    JOptionPane.PLAIN_MESSAGE);
+            if(x != 0)
+                return;
+            nMax = jftf.getText().trim();
+            System.out.println(nMax + nMax.length());
+        }
+
+        // Construct and execute SQL query
+        String q = "UPDATE modalida SET (nomeEsporte='" +
+                sport + "', maxAtletas=" +
+                nMax + ") WHERE (nomeMod='" +
+                name + "' AND catMod='" +
+                category + "')";
+        System.out.println(q);
+        if(!sql.query(q)) {
+            JOptionPane.showMessageDialog(null,
+                    "A atualização falhou!",
+                    "ERRO",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
     // TODO: adicionar as outras colunas e fazer que um campo em banco desconsidere a condição da coluna em questão.
     private void deleteModalidade() {
         MaskFormatter formatterName = null;
@@ -290,7 +378,7 @@ public class GUI extends JFrame implements ActionListener {
         jftf.setFormatterFactory(new DefaultFormatterFactory(formatterCategory));
         JOptionPane.showConfirmDialog(null,
                 box,
-                "Inserir modalidade",
+                "Remover modalidade",
                 JOptionPane.CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE);
         String category = jftf.getText().trim();
