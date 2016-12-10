@@ -328,7 +328,7 @@ public class GUI extends JFrame implements ActionListener {
         jftf.setFormatterFactory(new DefaultFormatterFactory(formatterCategory));
         reply = JOptionPane.showConfirmDialog(null,
                 box,
-                "Inserir modalidade",
+                "Remover modalidade",
                 JOptionPane.CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE);
         if(reply == JOptionPane.CANCEL_OPTION) return;
