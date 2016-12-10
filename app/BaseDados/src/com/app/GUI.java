@@ -7,7 +7,9 @@ import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
 import java.sql.*;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.*;
 
@@ -32,9 +34,21 @@ public class GUI extends JFrame implements ActionListener {
     private JPanel panOperations;
     private JPanel panList;
 
+    private MaskFormatter formatterName;
+    private MaskFormatter formatterCategory;
+    private MaskFormatter formatterMax;
+
     public GUI(SQL sql) {
         super("Base de dados");
         this.sql = sql;
+        try {
+            formatterName = new MaskFormatter("**************************************************");
+            formatterCategory = new MaskFormatter("****************************************");
+            formatterMax = new MaskFormatter("##");
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     public void display() {
@@ -132,6 +146,7 @@ public class GUI extends JFrame implements ActionListener {
                     txtPassword.setEnabled(false);
                     btnSelect.setEnabled(true);
                     btnInsert.setEnabled(true);
+                    btnUpdate.setEnabled(true);
                     btnDelete.setEnabled(true);
                 } else {
                     JOptionPane.showMessageDialog(null, "Falha na conexão!");
@@ -154,6 +169,9 @@ public class GUI extends JFrame implements ActionListener {
             case "sql-insert":
                 insertModalidade();
                 break;
+            case "sql-update":
+                updateModalidade();
+                break;
             case "sql-delete":
                 deleteModalidade();
                 break;
@@ -167,82 +185,75 @@ public class GUI extends JFrame implements ActionListener {
     }
 
     private void insertModalidade() {
-        MaskFormatter formatterName = null;
-        MaskFormatter formatterCategory = null;
-        MaskFormatter formatterMax = null;
-        try {
-            formatterName = new MaskFormatter("**************************************************");
-            formatterCategory = new MaskFormatter("****************************************");
-            formatterMax = new MaskFormatter("##");
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return;
-        }
-
         // Get name
-        JFormattedTextField jftf = new JFormattedTextField(formatterName);
-        jftf.setColumns(25);
-        JLabel jl = new JLabel("Nome: ");
-        Box box = Box.createHorizontalBox();
-        box.add(jl);
-        box.add(jftf);
-        String name = "";
-        while(name.length() == 0) {
-            int x = JOptionPane.showConfirmDialog(null,
-                    box,
-                    "Inserir modalidade",
-                    JOptionPane.CANCEL_OPTION,
-                    JOptionPane.PLAIN_MESSAGE);
-            if(x != 0)
-                return;
-            name = jftf.getText().trim();
-        }
+//        JFormattedTextField jftf = new JFormattedTextField(formatterName);
+//        jftf.setColumns(25);
+//        JLabel jl = new JLabel("Nome: ");
+//        Box box = Box.createHorizontalBox();
+//        box.add(jl);
+//        box.add(jftf);
+//        String name = "";
+//        while(name.length() == 0) {
+//            int reply = JOptionPane.showConfirmDialog(null,
+//                    box,
+//                    "Inserir Modalidade",
+//                    JOptionPane.OK_CANCEL_OPTION);
+//            if(reply == JOptionPane.CANCEL_OPTION) return;
+//            name = jftf.getText().trim();
+//        }
+        String name = retrieveUserInput(formatterName, "Nome: ", "Inserir Modalidade");
+        if(name == null)
+            return;
 
         // Get category
-        jl.setText("Categoria: ");
-        jftf.setValue("");
-        jftf.setFormatterFactory(new DefaultFormatterFactory(formatterCategory));
-        String category = "";
-        while(category.length() == 0) {
-            int x = JOptionPane.showConfirmDialog(null,
-                    box,
-                    "Inserir modalidade",
-                    JOptionPane.CANCEL_OPTION,
-                    JOptionPane.PLAIN_MESSAGE);
-            if(x != 0)
-                return;
-            category = jftf.getText().trim();
-        }
+//        jl.setText("Categoria: ");
+//        jftf.setValue("");
+//        jftf.setFormatterFactory(new DefaultFormatterFactory(formatterCategory));
+//        String category = "";
+//        while(category.length() == 0) {
+//            int reply = JOptionPane.showConfirmDialog(null,
+//                    box,
+//                    "Inserir modalidade",
+//                    JOptionPane.CANCEL_OPTION,
+//                    JOptionPane.PLAIN_MESSAGE);
+//            if(reply == JOptionPane.CANCEL_OPTION) return;
+//            category = jftf.getText().trim();
+//        }
+        String category = retrieveUserInput(formatterCategory, "Categoria", "Inserir Modalidade");
+        if(category == null)
+            return;
 
         // Get sport name
-        ArrayList<String> esportes = sql.selectColumn("nomeEsporte","esporte");
-        String[] tables = new String[esportes.size()];
-        tables = esportes.toArray(tables);
-        String sport = (String) JOptionPane.showInputDialog(null,
-                "Esporte:",
-                "Inserir modalidade",
-                JOptionPane.PLAIN_MESSAGE,
-                null,
-                tables,
-                tables[0]);
+//        ArrayList<String> esportes = sql.selectColumn("nomeEsporte","esporte");
+//        String[] tables = new String[esportes.size()];
+//        tables = esportes.toArray(tables);
+//        String sport = (String) JOptionPane.showInputDialog(null,
+//                "Esporte:",
+//                "Inserir modalidade",
+//                JOptionPane.PLAIN_MESSAGE,
+//                null,
+//                tables,
+//                tables[0]);
+        String sport = retrieveSports("Inserir modalidade");
 
         // Get maximum athletes
-        jl.setText("Número máximo de atletas: ");
-        jftf.setValue("");
-        jftf.setFormatterFactory(new DefaultFormatterFactory(formatterMax));
-        jftf.setColumns(10);
-        String nMax = "";
-        while(nMax.length() == 0) {
-            int x = JOptionPane.showConfirmDialog(null,
-                    box,
-                    "Inserir modalidade",
-                    JOptionPane.CANCEL_OPTION,
-                    JOptionPane.PLAIN_MESSAGE);
-            if(x != 0)
-                return;
-            nMax = jftf.getText().trim();
-        }
+//        jl.setText("Número máximo de atletas: ");
+//        jftf.setValue("");
+//        jftf.setFormatterFactory(new DefaultFormatterFactory(formatterMax));
+//        jftf.setColumns(10);
+//        String nMax = "";
+//        while(nMax.length() == 0) {
+//            int reply = JOptionPane.showConfirmDialog(null,
+//                    box,
+//                    "Inserir modalidade",
+//                    JOptionPane.CANCEL_OPTION,
+//                    JOptionPane.PLAIN_MESSAGE);
+//            if(reply == JOptionPane.CANCEL_OPTION) return;
+//            nMax = jftf.getText().trim();
+//        }
+        String nMax = retrieveUserInput(formatterMax, "Número Máximo de atletas", "Inserir Modalidade");
+        if(nMax == null)
+            return;
 
         // Construct and execute SQL query
         String q = "INSERT INTO modalidade VALUES('" +
@@ -258,19 +269,45 @@ public class GUI extends JFrame implements ActionListener {
         }
     }
 
-    // TODO: adicionar as outras colunas e fazer que um campo em banco desconsidere a condição da coluna em questão.
-    private void deleteModalidade() {
-        MaskFormatter formatterName = null;
-        MaskFormatter formatterCategory = null;
-        try {
-            formatterName = new MaskFormatter("**************************************************");
-            formatterCategory = new MaskFormatter("****************************************");
-
-        } catch (ParseException e) {
-            e.printStackTrace();
+    private void updateModalidade() {
+        if(tblData.getSelectedRow() == -1) {
+            JOptionPane.showMessageDialog(null,
+                    "Nenhuma linha selecionada!",
+                    "Erro",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
+        int row = tblData.getSelectedRow();
+        DefaultTableModel tableModel = (DefaultTableModel) tblData.getModel();
+        Object dataObject = tableModel.getDataVector().elementAt(row);
+        Vector data = (Vector) dataObject;
+//        for(int i = 0; i < 3; i++) System.out.println(data.elementAt(i));
+        String title = "Atualizar Modalidade";
+        String nomeMod = (String) data.elementAt(0);
+        String catMod = (String)data.elementAt(1);
+        String nomeEsporte = (String) data.elementAt(2);
+        BigDecimal maxAtletas = (BigDecimal) data.elementAt(3);
+//        nomeMod = retrieveUserInput(formatterName, "Nome (" + nomeMod + "): ", title);
+//        catMod = retrieveUserInput(formatterCategory, "Categoria (" + catMod + "): ", title);
+        nomeEsporte = retrieveSports(title, "Esporte (" + nomeEsporte + "):");
+        String maxAtletasStr = retrieveUserInput(formatterMax, "Número máximo de atletas ("+ maxAtletas.toEngineeringString() + "): ", title);
+        if(maxAtletasStr == null) {
+            return;
+        }
+        maxAtletas = new BigDecimal(maxAtletasStr);
+        DecimalFormat df = new DecimalFormat("00");
+        String q = "UPDATE modalidade SET " +
+                "nomeEsporte='" + nomeEsporte + "', " +
+                "maxAtletas=" + df.format(maxAtletas) + " " +
+                "WHERE nomeMod='" + nomeMod + "' AND " +
+                "catMod='" + catMod + "';";
+        if(!sql.query(q)) {
+            JOptionPane.showMessageDialog(null, "Erro ao atualizar registro!", title, JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
+    // TODO: adicionar as outras colunas e fazer que um campo em banco desconsidere a condição da coluna em questão.
+    private void deleteModalidade() {
         // Get name
         JFormattedTextField jftf = new JFormattedTextField(formatterName);
         jftf.setColumns(25);
@@ -278,21 +315,23 @@ public class GUI extends JFrame implements ActionListener {
         Box box = Box.createHorizontalBox();
         box.add(jl);
         box.add(jftf);
-        JOptionPane.showConfirmDialog(null,
+        int reply = JOptionPane.showConfirmDialog(null,
                 box,
                 "Remover modalidade",
                 JOptionPane.CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE);
+        if(reply == JOptionPane.CANCEL_OPTION) return;
         String name = jftf.getText().trim();
-// Get category
+        // Get category
         jl.setText("Categoria: ");
         jftf.setValue("");
         jftf.setFormatterFactory(new DefaultFormatterFactory(formatterCategory));
-        JOptionPane.showConfirmDialog(null,
+        reply = JOptionPane.showConfirmDialog(null,
                 box,
                 "Inserir modalidade",
                 JOptionPane.CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE);
+        if(reply == JOptionPane.CANCEL_OPTION) return;
         String category = jftf.getText().trim();
 
         // Construct and execute SQL query
@@ -320,7 +359,6 @@ public class GUI extends JFrame implements ActionListener {
                 tables[0]);
 
         // selectedTable will be null if the user clicks Cancel
-        System.out.printf("SELECT * FROM %s.\n", selectedTable);
         if(selectedTable != null)
             list(selectedTable);
     }
@@ -328,27 +366,27 @@ public class GUI extends JFrame implements ActionListener {
     private void list(String table) {
         try {
             ResultSet rs = sql.selectTable(table);
-            tblData.setModel(buildTableModel(sql.selectTable(table)));
+            tblData.setModel(buildTableModel(rs));
         } catch (SQLException e1) {
             e1.printStackTrace();
         }
     }
 
-    public static DefaultTableModel buildTableModel(ResultSet rs)
+    private static DefaultTableModel buildTableModel(ResultSet rs)
             throws SQLException {
         ResultSetMetaData metaData = rs.getMetaData();
 
         // names of columns
-        Vector<String> columnNames = new Vector<String>();
+        Vector<String> columnNames = new Vector<>();
         int columnCount = metaData.getColumnCount();
         for (int column = 1; column <= columnCount; column++) {
             columnNames.add(metaData.getColumnName(column));
         }
 
         // data of the table
-        Vector<Vector<Object>> data = new Vector<Vector<Object>>();
+        Vector<Vector<Object>> data = new Vector<>();
         while (rs.next()) {
-            Vector<Object> vector = new Vector<Object>();
+            Vector<Object> vector = new Vector<>();
             for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
                 vector.add(rs.getObject(columnIndex));
             }
@@ -356,5 +394,50 @@ public class GUI extends JFrame implements ActionListener {
         }
 
         return new DefaultTableModel(data, columnNames);
+    }
+
+    private String retrieveUserInput(MaskFormatter maskFormatter, String label, String title) {
+        JFormattedTextField jftf = new JFormattedTextField(maskFormatter);
+        jftf.setColumns(25);
+        JLabel jl = new JLabel(label);
+        Box box = Box.createHorizontalBox();
+        box.add(jl);
+        box.add(jftf);
+        String str = "";
+        while(str.length() == 0) {
+            int reply = JOptionPane.showConfirmDialog(null,
+                    box,
+                    title,
+                    JOptionPane.OK_CANCEL_OPTION);
+            if(reply == JOptionPane.CANCEL_OPTION) return null;
+            str = jftf.getText().trim();
+        }
+        return str;
+    }
+
+    private String retrieveSports(String title) {
+        ArrayList<String> esportes = sql.selectColumn("nomeEsporte","esporte");
+        String[] tables = new String[esportes.size()];
+        tables = esportes.toArray(tables);
+        return (String) JOptionPane.showInputDialog(null,
+                "Esporte:",
+                title,
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                tables,
+                tables[0]);
+    }
+
+    private String retrieveSports(String title, String msg) {
+        ArrayList<String> esportes = sql.selectColumn("nomeEsporte","esporte");
+        String[] tables = new String[esportes.size()];
+        tables = esportes.toArray(tables);
+        return (String) JOptionPane.showInputDialog(null,
+                msg,
+                title,
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                tables,
+                tables[0]);
     }
 }

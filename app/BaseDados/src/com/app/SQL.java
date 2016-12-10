@@ -20,10 +20,7 @@ public class SQL {
             conn = DriverManager.getConnection("jdbc:oracle:thin:@grad.icmc.usp.br:15215:orcl",user,password);
             this.user = user;
             return !conn.isClosed();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            return false;
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
             return false;
         }
