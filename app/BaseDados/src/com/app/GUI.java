@@ -46,8 +46,8 @@ public class GUI extends JFrame implements ActionListener {
         try {
             formatterName = new MaskFormatter("**************************************************");
             formatterCategory = new MaskFormatter("****************************************");
-            formatterMax = new MaskFormatter("##");
-
+//            formatterMax = new MaskFormatter("****************************************");
+//            formatterMax.setValidCharacters("0123456789");
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -203,81 +203,36 @@ public class GUI extends JFrame implements ActionListener {
 
     private void insertModalidade() {
         // Get name
-//        JFormattedTextField jftf = new JFormattedTextField(formatterName);
-//        jftf.setColumns(25);
-//        JLabel jl = new JLabel("Nome: ");
-//        Box box = Box.createHorizontalBox();
-//        box.add(jl);
-//        box.add(jftf);
-//        String name = "";
-//        while(name.length() == 0) {
-//            int reply = JOptionPane.showConfirmDialog(null,
-//                    box,
-//                    "Inserir Modalidade",
-//                    JOptionPane.OK_CANCEL_OPTION);
-//            if(reply == JOptionPane.CANCEL_OPTION) return;
-//            name = jftf.getText().trim();
-//        }
         String name = retrieveUserInput(formatterName, "Nome: ", "Inserir Modalidade");
         if(name == null)
             return;
 
         // Get category
-//        jl.setText("Categoria: ");
-//        jftf.setValue("");
-//        jftf.setFormatterFactory(new DefaultFormatterFactory(formatterCategory));
-//        String category = "";
-//        while(category.length() == 0) {
-//            int reply = JOptionPane.showConfirmDialog(null,
-//                    box,
-//                    "Inserir modalidade",
-//                    JOptionPane.CANCEL_OPTION,
-//                    JOptionPane.PLAIN_MESSAGE);
-//            if(reply == JOptionPane.CANCEL_OPTION) return;
-//            category = jftf.getText().trim();
-//        }
         String category = retrieveUserInput(formatterCategory, "Categoria", "Inserir Modalidade");
         if(category == null)
             return;
 
         // Get sport name
-//        ArrayList<String> esportes = sql.selectColumn("nomeEsporte","esporte");
-//        String[] tables = new String[esportes.size()];
-//        tables = esportes.toArray(tables);
-//        String sport = (String) JOptionPane.showInputDialog(null,
-//                "Esporte:",
-//                "Inserir modalidade",
-//                JOptionPane.PLAIN_MESSAGE,
-//                null,
-//                tables,
-//                tables[0]);
         String sport = retrieveSports("Inserir modalidade");
 
         // Get maximum athletes
-//        jl.setText("Número máximo de atletas: ");
-//        jftf.setValue("");
-//        jftf.setFormatterFactory(new DefaultFormatterFactory(formatterMax));
-//        jftf.setColumns(10);
-//        String nMax = "";
-//        while(nMax.length() == 0) {
-//            int reply = JOptionPane.showConfirmDialog(null,
-//                    box,
-//                    "Inserir modalidade",
-//                    JOptionPane.CANCEL_OPTION,
-//                    JOptionPane.PLAIN_MESSAGE);
-//            if(reply == JOptionPane.CANCEL_OPTION) return;
-//            nMax = jftf.getText().trim();
-//        }
-        String nMax = retrieveUserInput(formatterMax, "Número Máximo de atletas", "Inserir Modalidade");
-        if(nMax == null)
-            return;
+        Integer n = -1;
+        while(n < 0 || n > 99) {
+            String nMax = retrieveUserInput(formatterCategory, "Número Máximo de atletas", "Inserir Modalidade");
+            if(nMax == null)
+                return;
+            try {
+                n = Integer.parseInt(nMax);
+            } catch (Exception e) {
+            }
+        }
 
         // Construct and execute SQL query
         String q = "INSERT INTO modalidade VALUES('" +
                 name + "', '" +
                 category + "', '" +
                 sport + "', " +
-                nMax + ")";
+                n + ")";
         if(!sql.query(q)) {
             JOptionPane.showMessageDialog(null,
                     "A inserção falhou!",
@@ -427,6 +382,8 @@ public class GUI extends JFrame implements ActionListener {
                     title,
                     JOptionPane.OK_CANCEL_OPTION);
             if(reply == JOptionPane.CANCEL_OPTION) return null;
+            System.out.println("'" + jftf.getText() + "'");
+            System.out.println("'" + jftf.getText().trim() + "'");
             str = jftf.getText().trim();
         }
         return str;

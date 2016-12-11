@@ -9,7 +9,6 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Vector;
 
 public class SQL {
 
@@ -19,7 +18,6 @@ public class SQL {
     public SQL() {
         conn = null;
     }
-
 
     public boolean connect(String user, String password) {
         try {
@@ -42,7 +40,6 @@ public class SQL {
             }
         }
     }
-
 
     public boolean query(String q) {
         if(conn != null) {
@@ -133,7 +130,6 @@ public class SQL {
         return results;
     }
 
-
     public void report() throws IOException {
 
         PreparedStatement statement = null;
@@ -196,7 +192,6 @@ public class SQL {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-//        contentStream.endText();
         contentStream.close();
 
         // Save the results and ensure that the document is properly closed:
