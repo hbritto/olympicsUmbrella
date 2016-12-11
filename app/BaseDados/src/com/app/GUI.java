@@ -7,6 +7,7 @@ import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.text.DecimalFormat;
@@ -21,6 +22,7 @@ public class GUI extends JFrame implements ActionListener {
     private JButton btnUpdate;
     private JButton btnDelete;
     private JButton btnSelect;
+    private JButton btnReport;
 
     private JLabel lblModalidade;
     private JLabel lblAddress;
@@ -84,6 +86,11 @@ public class GUI extends JFrame implements ActionListener {
         btnSelect.setActionCommand("sql-select");
         btnSelect.addActionListener(this);
 
+        btnReport = new JButton("Relatório");
+        btnReport.setEnabled(false);
+        btnReport.setActionCommand("sql-report");
+        btnReport.addActionListener(this);
+
         lblAddress = new JLabel("Usuário:");
         lblPort = new JLabel("Senha:");
         txtUser = new JTextField("8910441", 10);
@@ -107,6 +114,7 @@ public class GUI extends JFrame implements ActionListener {
         panOperations.add(btnUpdate);
         panOperations.add(btnDelete);
         panOperations.add(btnSelect);
+        panOperations.add(btnReport);
 
         tblData = new JTable();
         panList.add(new JScrollPane(tblData));
@@ -148,6 +156,7 @@ public class GUI extends JFrame implements ActionListener {
                     btnInsert.setEnabled(true);
                     btnUpdate.setEnabled(true);
                     btnDelete.setEnabled(true);
+                    btnReport.setEnabled(true);
                 } else {
                     JOptionPane.showMessageDialog(null, "Falha na conexão!");
                 }
@@ -161,6 +170,7 @@ public class GUI extends JFrame implements ActionListener {
                 btnSelect.setEnabled(false);
                 btnInsert.setEnabled(false);
                 btnDelete.setEnabled(false);
+                btnReport.setEnabled(false);
                 break;
             case "gui-exit":
                 sql.disconnect();
@@ -177,6 +187,13 @@ public class GUI extends JFrame implements ActionListener {
                 break;
             case "sql-select":
                 selectModalidade();
+                break;
+            case "sql-report":
+                try {
+                    sql.report();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 break;
             default:
                 System.err.println("ActionEvent desconhecido: " + actionEvent.toString());
@@ -299,8 +316,8 @@ public class GUI extends JFrame implements ActionListener {
         String q = "UPDATE modalidade SET " +
                 "nomeEsporte='" + nomeEsporte + "', " +
                 "maxAtletas=" + df.format(maxAtletas) + " " +
-                "WHERE nomeMod='" + nomeMod + "' AND " +
-                "catMod='" + catMod + "';";
+                "WHERE (nomeMod='" + nomeMod + "' AND " +
+                "catMod='" + catMod + "')";
         if(!sql.query(q)) {
             JOptionPane.showMessageDialog(null, "Erro ao atualizar registro!", title, JOptionPane.ERROR_MESSAGE);
         }

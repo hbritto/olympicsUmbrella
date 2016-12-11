@@ -1,5 +1,12 @@
 package com.app;
 
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Vector;
@@ -73,7 +80,7 @@ public class SQL {
                 null;
             try {
             statement = conn.prepareStatement("SELECT * FROM " + table);
-        return statement.executeQuery();
+            return statement.executeQuery();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -124,5 +131,76 @@ public class SQL {
             }
         }
         return results;
+    }
+
+
+    public void report() throws IOException {
+
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+        try {
+            statement = conn.prepareStatement("Select Part.nome, count(*) from Participante Part join Atleta A on Part.passaporte = A.passaporte join Integra I on A.passaporte = I.idAtleta join Participa P on I.idEquipe = P.idEquipe group by Part.nome having count(*) >= 3");
+
+            rs = statement.executeQuery();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        // Create a document and add a page to it
+        PDDocument document = new PDDocument();
+        PDPage page = new PDPage();
+        document.addPage(page);
+
+        // Create a new font object selecting one of the PDF base fonts
+        PDFont font = PDType1Font.HELVETICA_BOLD;
+
+
+        // Define a text content stream using the selected font, moving the cursor and drawing the text "Hello World"
+        PDPageContentStream contentStream = new PDPageContentStream(document, page);
+        String title = "Relatório - Atletas que já participaram de três ou mais jogos";
+        float fontSize = 16;
+        float titleWidth = font.getStringWidth(title) / 1000 * fontSize;
+        float titleHeight = font.getFontDescriptor().getFontBoundingBox().getHeight() / 1000 * fontSize;
+        int marginTop = 30; // Or whatever margin you want.
+
+        contentStream.beginText();
+        contentStream.setFont(font, fontSize);
+        contentStream.newLineAtOffset((page.getMediaBox().getWidth() - titleWidth) / 2, page.getMediaBox().getHeight() - marginTop - titleHeight);
+        contentStream.showText(title);
+        contentStream.endText();
+
+        int i = 0;
+        fontSize = 12;
+        contentStream.setFont(font, 12);
+        String text = "Nome do atleta - Nº de jogos";
+        titleWidth = font.getStringWidth(text) / 1000 * fontSize;
+        titleHeight = font.getFontDescriptor().getFontBoundingBox().getHeight() / 1000 * fontSize;
+        contentStream.beginText();
+        contentStream.newLineAtOffset((page.getMediaBox().getWidth() - titleWidth) / 2, page.getMediaBox().getHeight() - marginTop - titleHeight - 100 - (i*20));
+        contentStream.showText(text);
+        contentStream.endText();
+
+        i++;
+        try {
+            while(rs.next()) {
+                text = rs.getString(1) + " - " + rs.getString(2);
+                titleWidth = font.getStringWidth(text) / 1000 * fontSize;
+                titleHeight = font.getFontDescriptor().getFontBoundingBox().getHeight() / 1000 * fontSize;
+                contentStream.beginText();
+                contentStream.newLineAtOffset((page.getMediaBox().getWidth() - titleWidth) / 2, page.getMediaBox().getHeight() - marginTop - titleHeight - 100 - (i*20));
+                contentStream.showText(text);
+                contentStream.endText();
+                i++;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+//        contentStream.endText();
+        contentStream.close();
+
+        // Save the results and ensure that the document is properly closed:
+        document.save("Relatório.pdf");
+        document.close();
     }
 }
