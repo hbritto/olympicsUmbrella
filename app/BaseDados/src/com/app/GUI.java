@@ -299,8 +299,8 @@ public class GUI extends JFrame implements ActionListener {
         String q = "UPDATE modalidade SET " +
                 "nomeEsporte='" + nomeEsporte + "', " +
                 "maxAtletas=" + df.format(maxAtletas) + " " +
-                "WHERE nomeMod='" + nomeMod + "' AND " +
-                "catMod='" + catMod + "';";
+                "WHERE (nomeMod='" + nomeMod + "' AND " +
+                "catMod='" + catMod + "')";
         if(!sql.query(q)) {
             JOptionPane.showMessageDialog(null, "Erro ao atualizar registro!", title, JOptionPane.ERROR_MESSAGE);
         }
